@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auto-revision-epistemic-engine"
+version = "4.2.0"
+description = "Self-governing orchestration framework with eight phases and four human oversight gates"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Auto-Rev Team"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "blake3>=0.4.1",
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
+    "python-dateutil>=2.8.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov",
+    "ruff",
+    "mypy",
+    "build",
+]
+
+[project.scripts]
+auto-revision-engine = "auto_revision_epistemic_engine.__main__:main"
+auto-revision-epistemic-engine = "auto_revision_epistemic_engine.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
