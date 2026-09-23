@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
+
 import blake3
-import pytest
 
 from auto_revision_epistemic_engine.reproducibility.state_manager import StateManager
 
