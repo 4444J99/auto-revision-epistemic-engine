@@ -21,12 +21,15 @@ agents:
   - name: ci
     trigger: on_push
     workflow: .github/workflows/ci-python.yml
-    description: "Continuous integration pipeline"
+    description: "Continuous integration pipeline and release packaging"
 
 produces:
   - type: dependency
     description: Consumed by organvm-ii-poiesis/art-from--auto-revision-epistemic-engine
     consumers: [organvm-ii-poiesis/art-from--auto-revision-epistemic-engine]
+  - type: package
+    description: Published Python package and CLI distribution
+    distribution: pypi
 
 subscriptions:
   - event: governance.updated

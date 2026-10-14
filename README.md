@@ -184,11 +184,12 @@ ARE draws on and extends ideas from several domains:
 ### Install
 
 ```bash
-# Clone the repository
+# Install directly from PyPI (or repository)
+pip install auto-revision-epistemic-engine
+
+# Or install in editable/development mode from source
 git clone https://github.com/organvm-i-theoria/auto-revision-epistemic-engine.git
 cd auto-revision-epistemic-engine
-
-# Install with dependencies
 pip install -e .
 ```
 
@@ -201,10 +202,23 @@ pyyaml>=6.0
 python-dateutil>=2.8.2
 ```
 
-### Quick Start
+### CLI Quick Start
+
+```bash
+# Run demonstration scenario
+auto-revision-engine demo
+
+# Run full pipeline with custom input JSON string or file
+auto-revision-engine run --seed 42 --inputs '{"data": {"records": 50}}'
+
+# Verify audit chain integrity
+auto-revision-engine audit --after-run
+```
+
+### Python Library Quick Start
 
 ```python
-from auto_revision_engine import AutoRevisionEngine
+from auto_revision_epistemic_engine import AutoRevisionEngine
 
 # Initialize the engine
 engine = AutoRevisionEngine()
