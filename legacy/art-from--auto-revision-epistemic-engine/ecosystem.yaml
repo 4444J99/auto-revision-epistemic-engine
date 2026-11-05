@@ -1,0 +1,8 @@
+schema_version: '1.0'
+repo: art-from--auto-revision-epistemic-engine
+organ: II
+display_name: "Interactive visualization of self-governing orchestration \u2014 governance\
+  \ as performance art"
+delivery:
+- platform: web_app
+  status: not_started
