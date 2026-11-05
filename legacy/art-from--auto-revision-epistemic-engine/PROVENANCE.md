@@ -1,0 +1,7 @@
+# Provenance
+
+Imported on 2026-11-05 from the private repository `4444J99/art-from--auto-revision-epistemic-engine` at commit `b5bc4b42c7239d3bd72fa96897843547d696bc84` as a scrubbed snapshot. The full history stays in that repository, which is archived.
+
+Scrub applied: local home-directory and volume paths rewritten to `~/` and `<archive>/`, launchd plists and cloudflared tunnel configs omitted (0 files); 0 files withheld as personal intake, data backups, secret templates or planning notes; 0 files dropped because they contain secret-shaped test strings; credential and personal-data scan clean.
+
+This is retired code kept for reference. See docs/standards/28-repo-naming-and-tagging.md in `organvm-corpvs-testamentvm`.
