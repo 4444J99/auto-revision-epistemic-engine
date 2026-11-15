@@ -17,13 +17,13 @@ class TestAutoRevisionEngine:
         assert engine.config.pipeline_id == "test_pipeline"
         assert engine.config.random_seed == 42
 
-    def test_pipeline_execution(self):
+    def test_pipeline_execution(self, tmp_path):
         """Test basic pipeline execution"""
         engine = AutoRevisionEngine(
             pipeline_id="test_execution",
             random_seed=123,
-            audit_log_dir="/tmp/test_audit",
-            state_dir="/tmp/test_state",
+            audit_log_dir=str(tmp_path / "audit"),
+            state_dir=str(tmp_path / "state"),
         )
         
         result = engine.execute(
@@ -34,13 +34,13 @@ class TestAutoRevisionEngine:
         assert "outputs" in result
         assert "pipeline_status" in result
 
-    def test_pipeline_status(self):
+    def test_pipeline_status(self, tmp_path):
         """Test pipeline status reporting"""
         engine = AutoRevisionEngine(
             pipeline_id="test_status",
             random_seed=456,
-            audit_log_dir="/tmp/test_audit2",
-            state_dir="/tmp/test_state2",
+            audit_log_dir=str(tmp_path / "audit"),
+            state_dir=str(tmp_path / "state"),
         )
         
         engine.execute(inputs={"data": {"records": 5}})
@@ -50,13 +50,13 @@ class TestAutoRevisionEngine:
         assert status["completed"] is True
         assert status["audit_chain_valid"] is True
 
-    def test_model_pinning(self):
+    def test_model_pinning(self, tmp_path):
         """Test model version pinning"""
         engine = AutoRevisionEngine(
             pipeline_id="test_pin",
             random_seed=789,
-            audit_log_dir="/tmp/test_audit3",
-            state_dir="/tmp/test_state3",
+            audit_log_dir=str(tmp_path / "audit"),
+            state_dir=str(tmp_path / "state"),
         )
         
         engine.pin_model("test-model", "v1.0.0")
@@ -65,13 +65,13 @@ class TestAutoRevisionEngine:
         assert "test-model" in repro["model_pins"]
         assert repro["model_pins"]["test-model"] == "v1.0.0"
 
-    def test_audit_trail(self):
+    def test_audit_trail(self, tmp_path):
         """Test audit trail creation"""
         engine = AutoRevisionEngine(
             pipeline_id="test_audit_trail",
             random_seed=101,
-            audit_log_dir="/tmp/test_audit4",
-            state_dir="/tmp/test_state4",
+            audit_log_dir=str(tmp_path / "audit"),
+            state_dir=str(tmp_path / "state"),
         )
         
         engine.execute(inputs={"data": {"records": 3}})
@@ -81,13 +81,13 @@ class TestAutoRevisionEngine:
         assert audit["total_entries"] > 0
         assert len(audit["attestations"]) >= 3  # At least 3 attestations
 
-    def test_ethics_axiom(self):
+    def test_ethics_axiom(self, tmp_path):
         """Test adding custom ethical axiom"""
         engine = AutoRevisionEngine(
             pipeline_id="test_ethics",
             random_seed=202,
-            audit_log_dir="/tmp/test_audit5",
-            state_dir="/tmp/test_state5",
+            audit_log_dir=str(tmp_path / "audit"),
+            state_dir=str(tmp_path / "state"),
         )
         
         engine.add_ethical_axiom(
@@ -105,11 +105,11 @@ class TestAutoRevisionEngine:
 class TestAuditLogger:
     """Test cases for audit logging"""
 
-    def test_audit_log_creation(self):
+    def test_audit_log_creation(self, tmp_path):
         """Test audit log creation"""
         from auto_revision_epistemic_engine.audit import AuditLogger
         
-        logger = AuditLogger(log_dir="/tmp/test_audit_logger")
+        logger = AuditLogger(log_dir=str(tmp_path / "audit_logger"))
         entry = logger.log_event(
             event_type="TEST_EVENT",
             actor="TEST_ACTOR",
@@ -120,11 +120,11 @@ class TestAuditLogger:
         assert entry.actor == "TEST_ACTOR"
         assert entry.entry_hash is not None
 
-    def test_audit_chain_integrity(self):
+    def test_audit_chain_integrity(self, tmp_path):
         """Test audit chain integrity verification"""
         from auto_revision_epistemic_engine.audit import AuditLogger
         
-        logger = AuditLogger(log_dir="/tmp/test_audit_chain")
+        logger = AuditLogger(log_dir=str(tmp_path / "audit_chain"))
         
         for i in range(5):
             logger.log_event(
@@ -139,11 +139,11 @@ class TestAuditLogger:
 class TestStateManager:
     """Test cases for state management"""
 
-    def test_state_snapshot_creation(self):
+    def test_state_snapshot_creation(self, tmp_path):
         """Test state snapshot creation"""
         from auto_revision_epistemic_engine.reproducibility import StateManager
         
-        manager = StateManager(state_dir="/tmp/test_state_mgr", random_seed=42)
+        manager = StateManager(state_dir=str(tmp_path / "state_mgr"), random_seed=42)
         
         snapshot = manager.create_snapshot(
             state_id="test_snapshot",
@@ -155,11 +155,11 @@ class TestStateManager:
         assert snapshot.phase == "TEST_PHASE"
         assert snapshot.state_hash is not None
 
-    def test_snapshot_verification(self):
+    def test_snapshot_verification(self, tmp_path):
         """Test state snapshot verification"""
         from auto_revision_epistemic_engine.reproducibility import StateManager
         
-        manager = StateManager(state_dir="/tmp/test_state_verify", random_seed=123)
+        manager = StateManager(state_dir=str(tmp_path / "state_verify"), random_seed=123)
         
         manager.create_snapshot(
             state_id="verify_test",
