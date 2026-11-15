@@ -63,21 +63,24 @@ class StateManager:
         # Apply random seed
         random.seed(self.config.random_seed)
         
-        # Compute config hash
-        self.config_hash = blake3.blake3(
-            self.config.model_dump_json().encode()
-        ).hexdigest()
-        
         # State tracking
         self._states: Dict[str, ImmutableState] = {}
+        self._recompute_config_hash()
         self._save_config()
 
     def _generate_seed(self) -> int:
         """Generate a reproducible seed based on timestamp"""
         return int(datetime.now(timezone.utc).timestamp() * 1000000) % (2**32)
 
+    def _recompute_config_hash(self):
+        """Recompute BLAKE3 hash from the current serialized reproducibility config"""
+        self.config_hash = blake3.blake3(
+            self.config.model_dump_json().encode()
+        ).hexdigest()
+
     def _save_config(self):
         """Save reproducibility configuration"""
+        self._recompute_config_hash()
         config_file = self.state_dir / "reproducibility_config.json"
         with open(config_file, "w") as f:
             config_dict = self.config.model_dump()
@@ -219,10 +222,8 @@ class StateManager:
                 # Apply random seed
                 random.seed(self.config.random_seed)
                 
-                # Recompute config hash
-                self.config_hash = blake3.blake3(
-                    self.config.model_dump_json().encode()
-                ).hexdigest()
+                # Save config to sync disk and recompute hash
+                self._save_config()
                 
                 return True
         except Exception:
